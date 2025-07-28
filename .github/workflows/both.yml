@@ -1,0 +1,26 @@
+name: Deploy Django to EC2 (Socket + Docker)-Test
+
+on:
+  push:
+    branches: [main]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v3
+    - name: install dependencis
+      run: pip install -r requirements.txt
+    - name: Run Tests
+      run: pytest
+  deploy:
+    need: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          script: |
+            cd ~/my_project
+            source venv/bin/activate
+            pip install -r requirments.txt 
+

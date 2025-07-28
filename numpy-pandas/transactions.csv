@@ -1,0 +1,7 @@
+transaction_id,user_id,amount,location,time,device,is_fraud
+T1001,U001,850.00,LA,2024-05-10 12:34,Galaxy S21,0
+T1002,U002,,NY,2024-05-11 09:20,iPhone 14,1
+T1003,U003,0.00,TX,2024-06-01 23:59,Pixel 6,0
+T1004,U004,1299.50,SF,2024-06-13 03:45,iPhone 13,1
+T1005,U005,450.75,NY,2024-06-14 18:20,OnePlus 9,0
+

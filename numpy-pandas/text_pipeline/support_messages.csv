@@ -1,0 +1,6 @@
+user_id,message,timestamp,category
+1001,"HELLO! I can't log in to my account!!! 😡",2024-08-01 09:00:00,Technical Support
+1002,"Necesito ayuda con mi factura.",2024-08-01 09:05:00,Billing Issue
+1003,"thank you, everything works now :-)",2024-08-01 09:10:00,Feedback
+1004,"why am I being charged TWICE????",2024-08-01 09:15:00,Billing Issue
+

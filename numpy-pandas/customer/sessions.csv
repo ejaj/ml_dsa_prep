@@ -1,0 +1,13 @@
+user_id,event_type,timestamp
+U001,login,2025-07-01
+U001,add_to_cart,2025-07-01
+U001,purchase,2025-07-01
+U002,login,2025-06-30
+U002,browse,2025-06-30
+U003,login,2025-07-01
+U003,browse,2025-07-01
+U005,login,2025-07-01
+U005,add_to_cart,2025-07-01
+U004,login,2025-05-20
+U004,purchase,2025-05-21
+

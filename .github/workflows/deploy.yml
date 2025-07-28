@@ -1,0 +1,40 @@
+name: Deploy Django to EC2 (Socket + Docker)
+
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+  
+  steps:
+  - name: Checkout Code
+    uses: actions/checkout@v3
+  - name: SSH & Deploy to EC2
+    uses: appleboy/ssh-action@v1.0.0
+    with:
+      host: ${{ secrets.EC2_HOST }}
+      username: ubuntu
+      key: ${{ secrets.EC2_SSH_KEY }}
+      script: |
+        sudo apt update
+          sudo apt install -y docker.io nginx
+
+          cd ~/my_project || git clone https://github.com/${{ github.repository }} ~/my_project
+          cd ~/my_project
+          git pull origin main
+
+          echo "Building Docker image..."
+          docker stop django_app || true && docker rm django_app || true
+          docker build -t django_app .
+
+          echo "Running Docker container..."
+          docker run -d \
+            -v /gunicorn-sock:/gunicorn-sock \
+            --name django_app \
+            django_app
+          
+          echo "Configuring Nginx..."
+          echo "$(<nginx.conf)" | sudo tee /etc/nginx/sites-available/default
+          sudo nginx -t && sudo systemctl restart nginx
+    
