@@ -18,3 +18,11 @@ def minCostClimbingStairs(cost):
     for i in range(2, n):
         dp[i] = cost[i] + min(dp[i-1], dp[i-2])
     return min(dp(n-1), dp[n-2])
+
+def climb_stairs(n):
+    one, two = 1, 1
+    for i in range(n-1):
+        temp = one
+        one = one+two
+        two = temp
+    return one
