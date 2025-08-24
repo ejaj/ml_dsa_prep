@@ -1,59 +1,48 @@
 import numpy as np
+from numpy.typing import NDArray
 
-
-class LinearRegression:
-
-    def get_model_prediction(self, X, weights):
-        """
-        Computes the linear regression model prediction using:
-        y_pred = X * w
-        """
-        return np.matmul(X, weights)  # Compute predictions
-
-    def get_error(self, model_prediction, ground_truth):
-        """
-        Computes Mean Squared Error (MSE):
-
-        MSE = (1/n) * Σ (y_true - y_pred)^2
-        """
-        mse = np.mean(np.square(model_prediction - ground_truth))
-        return round(mse, 5)
-
-    def get_derivative(self, model_prediction, ground_truth, N, X, desired_weight):
-        """
-        Computes the derivative of the loss function (MSE) w.r.t. weight w_j:
-                ∂J/∂w_j = - (2/N) * Σ (y_i - y_pred_i) * x_ij
-        """
-        derivative = -2 * np.dot(ground_truth - model_prediction, X[:, desired_weight]) / N
+class Solution:
+    def get_derivative(
+        self,
+        model_prediction: NDArray[np.float64],
+        ground_truth: NDArray[np.float64],
+        N: int,
+        X: NDArray[np.float64],
+        desired_weight: int
+    ) -> float:
+        # -2/N * (y - y_hat)^T * X[:, j]
+        residuals = ground_truth - model_prediction
+        feature_j = X[:, desired_weight]
+        numerator = np.dot(residuals, feature_j)
+        derivative = -2 * numerator / N 
         return derivative
+    
+    def get_model_prediction(self, X: NDArray[np.float64], weights: NDArray[np.float64]) -> NDArray[np.float64]:
+        return np.squeeze(np.matmul(X, weights))
 
-    def train_model(self, X, Y, num_iterations, initial_weights):
-        """
-        Trains the linear regression model using gradient descent:
+    learning_rate = 0.01
 
-            w_j = w_j - α * (∂J/∂w_j)
-        """
-        weights = np.array(initial_weights, dtype=np.float64)
-        learning_rate = 0.01
+    def train_model(
+        self, 
+        X: NDArray[np.float64], 
+        Y: NDArray[np.float64], 
+        num_iterations: int, 
+        initial_weights: NDArray[np.float64]
+    ) -> NDArray[np.float64]:
+        W = np.array(initial_weights, dtype=np.float64, copy=True)
         N = len(X)
-
+        y_true = np.squeeze(Y).astype(np.float32)
         for _ in range(num_iterations):
-            predictions = self.get_model_prediction(X, weights)
-            for j in range(len(weights)):  # Update each weight separately
-                gradient = self.get_derivative(predictions, Y, N, X, j)
-                weights[j] -= learning_rate * gradient
-        return np.round(weights, 5)
+            y_pred = self.get_model_prediction(X, W)
+            grad = np.zeros_like(W, dtype=np.float32)
+            for j in range(W.shape[0]):
+                grad[j] = self.get_derivative(y_pred, y_true, N, X, j)
+            W = W - self.learning_rate * grad
+        return np.round(W, 5)
 
-
-X = np.array([
-    [1, 2, 3],
-    [1, 1, 1]
-], dtype=np.float64)
-
-Y = np.array([6, 3], dtype=np.float64)  # Ground truth values
+X = [[1, 2, 3], [1, 1, 1]]
+Y = [6, 3]
 num_iterations = 10
-initial_weights = np.array([0.2, 0.1, 0.6], dtype=np.float64)
-
-solution = LinearRegression()
-final_weights = solution.train_model(X, Y, num_iterations, initial_weights)
-print("Final Weights:", final_weights)
+initial_weights = [0.2, 0.1, 0.6]
+sol = Solution()
+sol.train_model(X, Y, num_iterations, initial_weights)

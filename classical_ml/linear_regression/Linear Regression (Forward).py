@@ -21,7 +21,8 @@ class Solution:
             Nx1 NumPy array with predicted values, rounded to 5 decimal places.
         """
         predictions = np.matmul(X, weights)
-        return np.round(predictions, 5)
+        # return np.round(predictions, 5)
+        return np.squeeze(predictions)
 
     def get_error(self, model_prediction: NDArray[np.float64], ground_truth: NDArray[np.float64]) -> float:
         """
